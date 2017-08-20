@@ -41,7 +41,7 @@ module Data.Forest
 import Data.Eq (Eq)
 import Data.Foldable (Foldable)
 import Data.Function (($))
-import Data.Functor (Functor, (<$>), fmap)
+import Data.Functor (Functor, fmap, (<$>))
 import Data.Monoid (Monoid, mempty)
 import Data.Semigroup (Semigroup)
 import Data.Traversable (Traversable)
