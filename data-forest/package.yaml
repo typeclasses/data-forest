@@ -1,5 +1,5 @@
 name: data-forest
-version: 0.1.0.5
+version: 0.1.0.6
 category: Data Structures
 
 synopsis: >
@@ -25,7 +25,7 @@ license:      Apache-2.0
 license-file: license.txt
 
 dependencies:
-  - base >= 4.9 && < 4.10
+  - base >= 4.9 && < 4.11
 
 ghc-options:
   - -Wall
