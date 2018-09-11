@@ -25,7 +25,7 @@ license:      Apache-2.0
 license-file: license.txt
 
 dependencies:
-  - base >= 4.9 && < 4.11
+  - base >= 4.9 && < 4.12
 
 ghc-options:
   - -Wall
