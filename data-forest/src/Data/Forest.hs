@@ -201,7 +201,7 @@ showCharForest f =
     showCharTree t = case trees (subforest t) of
       []   -> [root t]
       [t'] -> [root t] <> ": " <> showCharTree t'
-      ts   -> [root t] <> ": (" <> showCharForest (subforest t) <> ")"
+      _    -> [root t] <> ": (" <> showCharForest (subforest t) <> ")"
 :}
 
 >>> showCharForest example

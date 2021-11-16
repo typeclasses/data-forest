@@ -34,10 +34,10 @@ library
   exposed-modules:
       Data.Forest
 
-test-suite doctest
+test-suite test
   default-language: Haskell2010
   type: exitcode-stdio-1.0
-  main-is: doctest.hs
+  main-is: Main.hs
   hs-source-dirs: test
   default-extensions: NoImplicitPrelude
   ghc-options: -Wall
@@ -45,4 +45,3 @@ test-suite doctest
   build-depends:
       base >=4.9 && <4.15
     , data-forest
-    , doctest
