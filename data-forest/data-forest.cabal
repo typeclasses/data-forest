@@ -29,7 +29,7 @@ library
   ghc-options: -Wall
 
   build-depends:
-      base >=4.9 && <4.15
+      base >=4.9 && <4.17
 
   exposed-modules:
       Data.Forest
@@ -43,5 +43,5 @@ test-suite test
   ghc-options: -Wall
 
   build-depends:
-      base >=4.9 && <4.15
+      base >=4.9 && <4.17
     , data-forest
