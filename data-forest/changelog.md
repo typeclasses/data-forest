@@ -1,3 +1,7 @@
+## 0.1.0.12 (2023-06-26)
+
+Change test-suite to hspec
+
 ## 0.1.0.11 (2023-06-26)
 
 Raise language version to GHC2021

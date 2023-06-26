@@ -1,11 +1,9 @@
 module Main (main) where
 
-import Control.Applicative (Applicative (pure, (<*>)), (<$>))
-import Control.Monad (Functor (fmap), Monad (return, (>>=)))
-import Data.Bool (Bool, (&&))
+import Control.Applicative ((<$>))
+import Control.Monad (Functor (fmap))
 import Data.Char (Char, toUpper)
-import Data.Eq (Eq ((==)))
-import Data.Foldable (Foldable (null, toList))
+import Data.Foldable (Foldable (toList))
 import Data.Forest
   ( Forest (..),
     Tree (..),
@@ -16,17 +14,15 @@ import Data.Forest
     leaves,
     tree,
   )
-import Data.Function (($), (.))
-import Data.List (intercalate, map)
+import Data.Function (($), (&), (.))
+import Data.List (intercalate)
 import Data.Semigroup (Semigroup ((<>)))
-import Numeric.Natural (Natural)
-import System.Exit (die)
-import System.IO (IO, putStrLn)
-import Text.Show (Show (show))
+import System.IO (IO)
+import Test.Hspec (hspec, shouldBe, specify)
 
 main :: IO ()
-main = dieIfFailures $ do
-  test 1 $
+main = hspec do
+  specify "" do
     let example :: Forest Char
         example =
           forest
@@ -37,14 +33,11 @@ main = dieIfFailures $ do
                     tree 'f' $ leaves "g"
                   ]
             ]
-     in foldForest
-          ( intercalate ", "
-              . fmap (\(a, b) -> [a] <> " [" <> b <> "]")
-          )
-          example
-          == "a [b [], c []], d [e [], f [g []]]"
+    shouldBe
+      (example & foldForest (intercalate ", " . fmap (\(a, b) -> [a] <> " [" <> b <> "]")))
+      "a [b [], c []], d [e [], f [g []]]"
 
-  test 2 $
+  specify "" do
     let example :: Tree Char
         example =
           tree 'a' $
@@ -56,14 +49,11 @@ main = dieIfFailures $ do
                       tree 'g' $ leaves "h"
                     ]
               ]
-     in foldTree
-          ( \a bs ->
-              [a] <> " [" <> intercalate ", " bs <> "]"
-          )
-          example
-          == "a [b [c [], d []], e [f [], g [h []]]]"
+    shouldBe
+      (example & foldTree \a bs -> [a] <> " [" <> intercalate ", " bs <> "]")
+      "a [b [c [], d []], e [f [], g [h []]]]"
 
-  test 3 $
+  specify "" do
     let example :: Forest Char
         example =
           forest
@@ -74,19 +64,16 @@ main = dieIfFailures $ do
                     tree 'f' $ leaves "g"
                   ]
             ]
-        showCharForest f =
-          intercalate ", " (showCharTree <$> trees f)
+        showCharForest f = intercalate ", " (showCharTree <$> trees f)
           where
             showCharTree t = case trees (subforest t) of
               [] -> [root t]
               [t'] -> [root t] <> ": " <> showCharTree t'
               _ -> [root t] <> ": (" <> showCharForest (subforest t) <> ")"
-     in showCharForest example
-          == "a: (b, c), d: (e, f: g)"
-          && showCharForest (fmap toUpper example)
-            == "A: (B, C), D: (E, F: G)"
+    shouldBe (example & showCharForest) "a: (b, c), d: (e, f: g)"
+    shouldBe (example & fmap toUpper & showCharForest) "A: (B, C), D: (E, F: G)"
 
-  test 4 $
+  specify "" do
     let example :: Forest Char
         example =
           forest
@@ -97,27 +84,4 @@ main = dieIfFailures $ do
                     tree 'f' $ leaves "g"
                   ]
             ]
-     in toList example == "abcdefg"
-
-dieIfFailures :: Failures a -> IO a
-dieIfFailures (Failures fs x) =
-  if null fs
-    then do putStrLn "💯"; return x
-    else die $ intercalate " " (map (("🔥" <>) . show) fs)
-
-type TestNumber = Natural
-
-test :: TestNumber -> Bool -> Failures ()
-test n t = Failures (if t then [] else [n]) ()
-
-data Failures a = Failures [TestNumber] a
-
-instance Functor Failures where
-  fmap f (Failures a x) = Failures a (f x)
-
-instance Applicative Failures where
-  pure x = Failures [] x
-  Failures a f <*> Failures b x = Failures (a <> b) (f x)
-
-instance Monad Failures where
-  Failures a x >>= f = let Failures b y = f x in Failures (a <> b) y
+    shouldBe (example & toList) "abcdefg"
